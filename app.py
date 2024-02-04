@@ -4,7 +4,6 @@ from flask import Flask,redirect, render_template, flash, request, session, g, j
 from sqlalchemy.exc import IntegrityError
 import requests
 
-from SECRETS import API_KEY, SECRET_KEY
 from models import db, connect_db, User, Quote, Tag
 from forms import SignUpForm, LoginForm, QuoteForm, EditUserForm
 CURR_USER_KEY = 'curr_user'
