@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/static/stylesheets/homepage.css">
+    <link rel="stylesheet" href="/static/stylesheets/quote.css">
+    <link rel="stylesheet" href="/static/stylesheets/profile.css">
+{% endblock %}
+
+{% block content %}
+<div id="qotd-div" style="background-image: url(https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg?cs=srgb&dl=pexels-bri-schneiter-346529.jpg&fm=jpg); height: 100%; background-size: cover;">
+  <div id="qotd-card" >
+    <h1>{{qotd.body}}</h1>
+    <p>- <i>{{qotd.author}}</i></p>
+  </div>
+</div>
+
+<hr>
+<br>
+
+<section class="main-section">
+  <div class="mini-nav">
+
+    <a href="/" class="btn btn-sm btn-outline-primary mini-nav-item">Home</a>
+
+    {% if request.endpoint != None %}
+    <form id="search-form" class="search-form mini-nav-item">
+      <input name="search" class="search-bar nosubmit" placeholder="Search for Users" id="search-term">
+    </form>
+    {% endif %}
+
+    <button id="tags-btn" class="btn btn-sm btn-outline-primary mini-nav-item">Tags</button>
+
+
+  </div>
+  <div id="main-content-area">
+
+    <ul>
+
+      {% for quote in quotes %}
+      <li class="list-group-item">
+    
+        <div class="user-info">
+            <div class="quote-area">
+              <a href="/users/{{ quote.user_id }}">
+                <img src="{{ quote.user.img_url }}" class="quote-img" alt="user image">
+            </a>
+                <a href="/users/{{ quote.user_id }}">@{{ quote.user.username }}</a>
+                <span><small>{{ quote.timestamp.strftime('%d %B %Y') }}</small></span>
+                <p class="quote">{{ quote.text }} -<small><i>{{quote.author}}</i></small></p>
+            </div>
+        </div>
+
+        {% if g.user %}
+        {% if quote in g.user.saves %}
+        <button id="{{quote.id}}" name="save-btn" class="
+              btn 
+              btn-sm 
+              btn-secondary 
+              save-btn">
+          <i id="heart" class="fa-solid fa-heart"></i>
+        </button>
+        {% else %}
+        <button id="{{quote.id}}" name="save-btn" class="
+              btn 
+              btn-sm 
+              btn-secondary 
+              save-btn">
+          <i id="heart" class="fa-regular fa-heart"></i>
+        </button>
+        {% endif %}
+        {% endif %}
+
+        <div><small>Saved: {{quote.saves | length}}</small></div>
+
+        {% if quote.tags %}
+        <small><b>Tags:</b></small>
+        {% for tag in quote.tags %}
+        <a href="/tags/{{tag.id}}" class="tag">{{tag.name}}</a>
+        {% endfor %}
+        {% endif %}
+
+      </li>
+
+      <br>
+
+      {% endfor %}
+    </ul>
+
+  </div>
+
+</section>
+
+<script src="/static/js/quote.js"></script>
+<script src="/static/js/homepage.js"></script>
+{% endblock %}

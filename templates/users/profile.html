@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/stylesheets/quote.css">
+<link rel="stylesheet" href="/static/stylesheets/profile.css">
+{% endblock %}
+
+{% block content %}
+<div class="user-profile-header">
+  <div>
+    <img src="{{ user.img_url }}" alt="Image for {{ user.username }}" class="user-profile-avatar">
+  
+  </div>
+  
+  <div>
+    <h3 class="user-profile-info">@{{user.username}}</h3>
+  
+    <h4 class="user-profile-info"><a href="/users/{{user.id}}">Quotes:</a> {{user.quotes | length}}</h4>
+  
+    <h4 class="user-profile-info"><button id="{{user.id}}" name="followers-btn" class="btn btn-link followers-btn">
+        <h4>Followers:</h4>
+      </button> {{user.followers | length}}</h4>
+    <h4 class="user-profile-info"><button id="{{user.id}}" name="following-btn" class="btn btn-link following-btn">
+        <h4>Following:</h4>
+      </button> {{user.following | length}}</h4>
+  
+    {% if g.user == user %}
+    <a href="/users/edit/{{user.id}}" class="btn btn-sm btn-outline-primary">Edit Info</a>
+    {% endif %}
+  
+    {% if g.user %}
+    {% if g.user != user %}
+    {% if user in g.user.following %}
+    <button id="{{user.id}}" name="follow-btn" class="btn btn-sm btn-outline-secondary">Unfollow</button>
+    {% else %}
+    <button id="{{user.id}}" name="follow-btn" class="btn btn-sm btn-outline-primary">Follow</button>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+      
+    {% if g.user == user %}
+    <h4>My favorite quote:</h4>
+    {% else %}
+    <h4>{{user.username}}'s favorite quote:</h4>
+    {% endif %}
+    <h3 class="fav-quote">{{ user.fav_quote }} -<small><i>{{ user.fav_quote_author }}</i></small></h3>
+  
+  </div>
+</div>
+
+<hr>
+
+<section id="profile-main-content">
+
+  <div class="column">
+    {% if not quotes %}
+    <div>
+      <h3>No quotes yet . . .</h3>
+      <hr>
+    </div>
+    {% else %}
+      {% if g.user != user %}
+        <h3 id="profile-card-title">{{user.username}}'s quotes</h3>
+      {% else %}
+        <h3 id="profile-card-title">My quotes</h3>
+      {% endif %}
+      <hr>
+    <ul>
+
+ 
+    {% for quote in quotes %}
+    <li class="list-group-item">
+    
+      <div class="user-info">
+          <div class="quote-area">
+            <a href="/users/{{ quote.user_id }}">
+              <img src="{{ quote.user.img_url }}" class="quote-img" alt="user image">
+          </a>
+              <a href="/users/{{ quote.user_id }}">@{{ quote.user.username }}</a>
+              <span><small>{{ quote.timestamp.strftime('%d %B %Y') }}</small></span>
+              <p class="quote">{{ quote.text }} -<small><i>{{quote.author}}</i></small></p>
+          </div>
+      </div>
+
+      {% if g.user == user %}
+      <a href="/quotes/edit/{{quote.id}}" class="btn btn-sm btn-outline-secondary">Edit</a>
+      <button id="{{quote.id}}" name="delete-btn" class="btn btn-sm btn-outline-danger"><i
+          class="fa-regular fa-trash-can"></i></button>
+      {% endif %}
+    
+
+      {% if g.user  %}
+      {% if g.user != user %}
+      {% if quote in g.user.saves %}
+      <button id="{{quote.id}}" name="save-btn" class="
+            btn 
+            btn-sm 
+            btn-secondary 
+            save-btn">
+        <i id="heart" class="fa-solid fa-heart"></i>
+      </button>
+      {% else %}
+      <button id="{{quote.id}}" name="save-btn" class="
+            btn 
+            btn-sm 
+            btn-secondary 
+            save-btn">
+        <i id="heart" class="fa-regular fa-heart"></i>
+      </button>
+      {% endif %}
+      {% endif %}
+
+      <div><small>Saved: {{quote.saves | length}}</small></div>
+
+      {% if quote.tags %}
+      <small><b>Tags:</b></small>
+      {% for tag in quote.tags %}
+      <a href="/tags/{{tag.id}}" class="tag">{{tag.name}}</a>
+      {% endfor %}
+      {% endif %}
+      {% endif %}
+
+    </li>
+
+    <br>
+    {% endfor %}
+  </ul>
+    {% endif %}
+  </div>
+
+  <div class="column">
+    {% if not user.saves %}
+    <div>
+      <h3>Hasn't saved any quotes yet . . .</h3>
+      <hr>
+    </div>
+    {% else %}
+
+    <h3>Saved Quotes</h3>
+    <hr>
+
+    <ul>
+
+    {% for quote in user.saves %}
+      <li class="list-group-item ">
+    
+        <div class="user-info">
+            <div class="quote-area">
+              <a href="/users/{{ quote.user_id }}">
+                <img src="{{ quote.user.img_url }}" class="quote-img" alt="user image">
+            </a>
+                <a href="/users/{{ quote.user_id }}">@{{ quote.user.username }}</a>
+                <span><small>{{ quote.timestamp.strftime('%d %B %Y') }}</small></span>
+                <p class="quote">{{ quote.text }} -<small><i>{{quote.author}}</i></small></p>
+            </div>
+        </div>
+
+        {% if g.user %}
+        {% if quote in g.user.saves %}
+        <button id="{{quote.id}}" name="save-btn" class="
+              btn 
+              btn-sm 
+              btn-secondary 
+              save-btn">
+          <i id="heart" class="fa-solid fa-heart"></i>
+        </button>
+        {% else %}
+        <button id="{{quote.id}}" name="save-btn" class="
+              btn 
+              btn-sm 
+              btn-secondary 
+              save-btn">
+          <i id="heart" class="fa-regular fa-heart"></i>
+        </button>
+        {% endif %}
+        {% endif %}
+
+        <div><small>Saved: {{quote.saves | length}}</small></div>
+
+        {% if quote.tags %}
+        <small><b>Tags:</b></small>
+        {% for tag in quote.tags %}
+        <a href="/tags/{{tag.id}}" class="tag">{{tag.name}}</a>
+        {% endfor %}
+        {% endif %}
+
+      </li>
+
+      <br>
+    {% endfor %}
+  </ul>
+    {% endif %}
+  </div>
+
+</section>
+
+
+<script src="/static/js/user.js"></script>
+<script src="/static/js/quote.js"></script>
+
+{% endblock %}

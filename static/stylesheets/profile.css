@@ -1,0 +1,64 @@
+
+.profile-avatar{
+    border-radius: 48px;
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+}
+
+.profile-div{
+    display: inline-block;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid rgba(224, 221, 221, 0.582);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.fav-quote{
+    margin-top: 15px;
+    font-size: large;
+    width: auto;
+}
+
+.user-profile-avatar{
+    border-radius: 100px;
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+}
+
+.user-profile-info{
+    display: inline-block;
+    margin-right: 50px;
+}
+
+.user-profile-header{
+    padding: 10px;
+}
+
+#profile-main-content{
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    width: 48%; /* Adjust the width as needed */
+  }
+
+.followers-btn{
+    text-decoration: none;
+}
+
+.following-btn{
+    text-decoration: none;
+}
+
+.fav-quote{
+    padding: 10px;
+    width: 90%;
+    margin-bottom: 10px;
+    height: 50%;
+    width: 50%;
+}
